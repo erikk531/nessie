@@ -11,9 +11,6 @@ import Alamofire
 import SwiftyJSON
 
 @IBDesignable class ViewController: UIViewController {
-    
-    
-    
     override func viewDidLoad() {
         super.viewDidLoad()
     }
@@ -41,17 +38,12 @@ import SwiftyJSON
     }
     
     @IBAction func makeADeposit(sender: AnyObject) {
-        
+        submitDeposit()
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+    @IBAction func getAllCustomers(sender: AnyObject) {
+        getAllCustomersEnterprise()
+    }
     
     // get all atms
     func getAllAtms() {
@@ -134,9 +126,9 @@ import SwiftyJSON
             "medium": "balance",
             "transaction_date": "2016-01-29",
             "status": "completed",
-            "amount": 300,
-            "description": "For stuff."
+            "amount": Constants.recurringDepositAmount
         ]
+        
         Alamofire.request(.POST, endpoint, encoding: .JSON, parameters: parameters).responseJSON {
             response -> Void in
             
@@ -148,7 +140,21 @@ import SwiftyJSON
                 print(error)
             }
         }
-        
+    }
+    
+    func getAllCustomersEnterprise() {
+        let endpoint = "http://api.reimaginebanking.com/enterprise/customers"
+        Alamofire.request(.GET, endpoint, parameters: ["key":Constants.nessieApiKey]).responseJSON {
+            response -> Void in
+            
+            switch response.result {
+            case .Success(let data):
+                let json = JSON(data)
+                print(json)
+            case .Failure(let error):
+                print(error)
+            }
+        }
     }
 }
 
